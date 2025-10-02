@@ -1,0 +1,12 @@
+Code
+SELECT
+    CHAR_LENGTH('€') AS CharacterLength,
+    LENGTH('€') AS ByteLength;
+
+Expected Output:
+CharacterLength - 1
+ByteLength - 3
+
+In summary:
+Use CHAR_LENGTH() when you need to know the number of visible characters in a string, which is often more intuitive for human-readable content.
+Use LENGTH() when you need to know the actual storage size of the string in bytes, which can be relevant for performance or storage considerations.
