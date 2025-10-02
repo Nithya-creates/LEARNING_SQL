@@ -1,0 +1,41 @@
+**DATE_ADD:**
+
+SELECT W1.id AS Id
+FROM Weather W1
+JOIN Weather W2
+  ON W1.recordDate = DATE_ADD(W2.recordDate, INTERVAL 1 DAY)
+WHERE W1.temperature > W2.temperature;
+
+**DATE_SUB (just flip the logic):**
+
+Instead of saying W1 = W2 + 1 day,
+we can say W2 = W1 − 1 day:
+
+SELECT W1.id AS Id
+FROM Weather W1
+JOIN Weather W2
+  ON W2.recordDate = DATE_SUB(W1.recordDate, INTERVAL 1 DAY)
+WHERE W1.temperature > W2.temperature;
+
+**DATEDIFF:**
+
+SELECT W1.id AS Id
+FROM Weather W1
+JOIN Weather W2
+  ON DATEDIFF(W1.recordDate, W2.recordDate) = 1
+WHERE W1.temperature > W2.temperature;
+
+**window function:**
+
+We can use LAG to look at the previous day’s temperature without self-join:
+SELECT id
+FROM (
+  SELECT id,
+         recordDate,
+         temperature,
+         LAG(temperature) OVER (ORDER BY recordDate) AS prev_temp,
+         LAG(recordDate) OVER (ORDER BY recordDate) AS prev_date
+  FROM Weather
+) t
+WHERE DATEDIFF(recordDate, prev_date) = 1
+  AND temperature > prev_temp;
